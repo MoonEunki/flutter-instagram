@@ -1,6 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() => runApp(MaterialApp(home: MyApp()));
 
@@ -15,6 +17,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int tab = 0;
+  var instaData;
+
+  getData() async {
+    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
+    instaData = jsonDecode(result.body);
+    print(instaData);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +41,12 @@ class _MyAppState extends State<MyApp> {
           actions: [Icon(Icons.add_box_outlined, color: Colors.black, size: 36)],
         ),
         body: [
-          ListView(
-            children: [
-              Container(child: insta_item()),
-              Container(child: insta_item()),
-              Container(child: insta_item()),
-            ],
-          ),
-          Text('샵', style: a),
+          Home(instaData: instaData),
+          Text('샵z', style: a),
         ][tab],
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          // fixedColor: Colors.black,
           selectedItemColor: Colors.black,
           onTap: (i) {
             setState(() {
@@ -59,33 +67,26 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class insta_item extends StatelessWidget {
-  const insta_item({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+  const Home({Key? key, this.instaData}) : super(key: key);
+
+  final instaData;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image(image: AssetImage('assets/images/bus.png')),
-        Text('좋아요'),
-        Text('글쓴이'),
-        Text('글내용'),
-      ],
-    );
+    return ListView.builder(
+        itemCount: 3,
+        itemBuilder: (context, i) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(instaData[i]['image'].toString()),
+              Text(instaData[i]['liked'].toString()),
+              Text(instaData[i]['user'].toString()),
+              Text(instaData[i]['content'].toString()),
+            ],
+          );
+        });
   }
 }
-
-      // BottomAppBar(
-      //   child: Container(
-      //     height: 50,
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //       children: [
-      //         Icon(Icons.home_outlined),
-      //         Icon(Icons.shopping_bag_outlined),
-      //       ],
-      //     ),
-      //   ),
-      // ),
