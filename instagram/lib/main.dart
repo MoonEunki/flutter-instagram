@@ -21,7 +21,10 @@ class _MyAppState extends State<MyApp> {
 
   getData() async {
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
-    instaData = jsonDecode(result.body);
+    var result2 = jsonDecode(result.body);
+    setState(() {
+      instaData = result2;
+    });
     print(instaData);
   }
 
@@ -74,7 +77,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    if (instaData != null && instaData.isNotEmpty) {
+      return ListView.builder(
         itemCount: 3,
         itemBuilder: (context, i) {
           return Column(
@@ -87,6 +91,10 @@ class Home extends StatelessWidget {
               Text(instaData[i]['content'].toString()),
             ],
           );
-        });
+        },
+      );
+    } else {
+      return Text('로딩중입니다');
+    }
   }
 }
