@@ -10,18 +10,26 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'notification.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() => runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => Store1()),
-          ChangeNotifierProvider(create: (context) => Store2()),
-        ],
-        child: MaterialApp(
-          home: MyApp(),
-        ),
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Store1()),
+        ChangeNotifierProvider(create: (context) => Store2()),
+      ],
+      child: MaterialApp(
+        home: MyApp(),
       ),
-    );
+    ),
+  );
+}
 
 var a = TextStyle(fontSize: 20, color: Colors.black);
 

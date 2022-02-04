@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.instagram"
+        applicationId "com.mek.instagram"
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
